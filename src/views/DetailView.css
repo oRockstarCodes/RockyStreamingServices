@@ -1,0 +1,78 @@
+.detail-view-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #121212;
+  color: white;
+  padding: 20px;
+  height: 100%;
+}
+
+.movie-poster {
+  width: 250px;
+  height: 375px;
+  border-radius: 8px;
+  object-fit: cover;
+  margin-bottom: 20px;
+}
+
+.movie-details {
+  width: 100%;
+  max-width: 900px;
+  text-align: center;
+  padding: 10px;
+}
+
+.movie-title {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.movie-info {
+  font-size: 1rem;
+  margin-bottom: 15px;
+}
+
+.movie-description {
+  font-size: 1rem;
+  margin-bottom: 20px;
+}
+
+.trailers-section {
+  width: 100%;
+  text-align: center;
+  margin-top: 40px;
+}
+
+.trailer-tile {
+  display: inline-block;
+  margin: 10px;
+  text-align: center;
+}
+
+.trailer-thumbnail {
+  width: 300px;
+  height: 170px;
+  border-radius: 8px;
+  object-fit: cover;
+  cursor: pointer;
+  transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.trailer-thumbnail:hover {
+  transform: scale(1.05);
+  filter: brightness(1.1);
+}
+
+.trailer-tile h3 {
+  margin-top: 10px;
+  color: #ccc;
+  font-size: 1rem;
+}
+
+.no-trailers {
+  font-size: 1.1rem;
+  color: #888;
+  margin-top: 20px;
+}

@@ -93,6 +93,9 @@ function SettingsView() {
           <br></br>
           <button onClick={() => updateGenres()}>Update Your Genres</button>
         </div>
+        <div className="previous-purchases">
+
+        </div>
       </div>
       <Footer />
     </div>

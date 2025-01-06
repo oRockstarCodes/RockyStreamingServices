@@ -3,13 +3,22 @@ import { Outlet, useNavigate, Link } from "react-router-dom";
 import Genres from "../components/Genres";
 import Footer from "../components/Footer";
 import { useStoreContext } from "../context";
+import { signOut } from "firebase/auth";
+import { auth } from "../firebase";
 
 function MoviesView() {
     const navigate = useNavigate();
-    const { choices, firstName } = useStoreContext();
-    
-    function logout() {
-        navigate("/");
+    const { choices, firstName, user, setUser } = useStoreContext();
+
+    async function logout() {
+        try {
+            await navigate("/");
+            setUser(null);
+            signOut(auth);
+        }catch (error){
+            alert("Error Signing Out");
+        }
+        
     }
 
     return (

@@ -79,10 +79,9 @@ function RegisterView() {
               </div>
             ))}
             <button id="register" style={{ cursor: 'pointer' }}>Register</button>
+            <button id="google-register" style={{ cursor: 'pointer '}}> Register With Google</button>
           </form>
-          <p className="login-link">
-            Already have an account? <Link to={'/login'}>Login</Link>
-          </p>
+          <p className="login-link">Already have an account? <Link to={'/login'}>Login</Link></p>
         </div>
       </div>
       <Footer />

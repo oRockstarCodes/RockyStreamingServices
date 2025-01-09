@@ -31,6 +31,7 @@ function CartView() {
           }
         </div>
         <button className="add-more-button" onClick={handleAddMore}>Add More</button>
+        <button className="buy-button">Buy</button>
       </div>
       <br />
       <Footer />

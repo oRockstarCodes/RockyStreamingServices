@@ -21,22 +21,19 @@ function RegisterView() {
 
   const registerByEmail = async (event) => {
     event.preventDefault();
+    const selectedGenres = Object.keys(checkboxesRef.current).filter((genreId) => checkboxesRef.current[genreId].checked).map(Number);
+    const sortedGenres = selectedGenres.map((genreId) => genres.find((genre) => genre.id === genreId)).sort((a, b) => a.genre.localeCompare(b.genre));
+    const user = (await createUserWithEmailAndPassword(auth, email, password)).user;
     try {
-      const user = (await createUserWithEmailAndPassword(auth, email, password)).user;
       await updateProfile(user, { displayName: `${firstName} ${lastName}` });
       setUser(user);
-      const selectedGenres = Object.keys(checkboxesRef.current).filter((genreId) => checkboxesRef.current[genreId].checked).map(Number);
-
       if (selectedGenres.length < 10) {
         alert("Please select at least 10 genres!");
         return;
       }
-
       if (password.current.value != checkPassword) {
         return alert("Passwords do not match. Please re-enter your password correctly");
       }
-
-      const sortedGenres = selectedGenres.map((genreId) => genres.find((genre) => genre.id === genreId)).sort((a, b) => a.genre.localeCompare(b.genre));
       setFirstName(firstName.current.value);
       setLastName(lastName.current.value);
       setEmail(email.current.value);
@@ -45,11 +42,10 @@ function RegisterView() {
       setChoices(sortedGenres);
       setDefaultGenre(sortedGenres[0].id);
       setCart(Map());
-      console.log("test");
-      console.log(sortedGenres[0].id);
       navigate(`/movies/genre/${sortedGenres[0].id}`);
     } catch (error) {
       alert("Error creating user with email and password!");
+      console.log(user);
     }
   }
 
@@ -57,7 +53,12 @@ function RegisterView() {
     try {
       const user = (await signInWithPopup(auth, new GoogleAuthProvider())).user;
       setUser(user);
-      navigate('/movies/all');
+      setLoggedIn(true);
+      if (selectedGenres.length < 10) {
+        alert("Please select at least 10 genres!");
+        return;
+      }
+      navigate(`/movies/genre/${sortedGenres[0].id}`);
     } catch {
       alert("Error creating user with email and password!");
     }
@@ -69,7 +70,7 @@ function RegisterView() {
       <div className="register-container">
         <div className="form-container">
           <h1>Create an Account</h1>
-          <form onSubmit={(event) => { register(event) }} action="#" method="POST">
+          <form onSubmit={(event) => { registerByEmail(event) }} action="#" method="POST">
             <label>First Name:</label>
             <input type="text" ref={firstName} required></input>
             <label>Last Name:</label>

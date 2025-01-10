@@ -11,7 +11,7 @@ import { auth } from "../firebase";
 
 function RegisterView() {
   const navigate = useNavigate();
-  const { setFirstName, setLastName, setEmail, setPassword, setChoices, setLoggedIn, setDefaultGenre, setCart, genres } = useStoreContext();
+  const { setFirstName, setLastName, setEmail, setPassword, setChoices, setLoggedIn, setDefaultGenre, setCart, genres, setUser } = useStoreContext();
   const firstName = useRef('');
   const lastName = useRef('');
   const email = useRef('');
@@ -23,9 +23,9 @@ function RegisterView() {
     event.preventDefault();
     const selectedGenres = Object.keys(checkboxesRef.current).filter((genreId) => checkboxesRef.current[genreId].checked).map(Number);
     const sortedGenres = selectedGenres.map((genreId) => genres.find((genre) => genre.id === genreId)).sort((a, b) => a.genre.localeCompare(b.genre));
-    const user = (await createUserWithEmailAndPassword(auth, email, password)).user;
+    const user = (await createUserWithEmailAndPassword(auth, email.current.value, password.current.value)).user;
     try {
-      await updateProfile(user, { displayName: `${firstName} ${lastName}` });
+      await updateProfile(user, { displayName: `${firstName.current.value} ${lastName.current.value}` });
       setUser(user);
       if (selectedGenres.length < 10) {
         alert("Please select at least 10 genres!");
@@ -33,11 +33,9 @@ function RegisterView() {
       }
       if (password.current.value != checkPassword) {
         return alert("Passwords do not match. Please re-enter your password correctly");
+      }else{
+        setPassword(password.current.value);
       }
-      setFirstName(firstName.current.value);
-      setLastName(lastName.current.value);
-      setEmail(email.current.value);
-      setPassword(password.current.value);
       setLoggedIn(true);
       setChoices(sortedGenres);
       setDefaultGenre(sortedGenres[0].id);
@@ -45,7 +43,6 @@ function RegisterView() {
       navigate(`/movies/genre/${sortedGenres[0].id}`);
     } catch (error) {
       alert("Error creating user with email and password!");
-      console.log(user);
     }
   }
 
@@ -72,11 +69,11 @@ function RegisterView() {
           <h1>Create an Account</h1>
           <form onSubmit={(event) => { registerByEmail(event) }} action="#" method="POST">
             <label>First Name:</label>
-            <input type="text" ref={firstName} required></input>
+            <input type="text" ref={firstName} onChange={(e) => setFirstName(e.target.value)} required></input>
             <label>Last Name:</label>
-            <input type="text" ref={lastName} required></input>
+            <input type="text" ref={lastName} onChange={(e) => setLastName(e.target.value)} required></input>
             <label>Email:</label>
-            <input type="email" ref={email} required></input>
+            <input type="email" ref={email} onChange={(e) => setEmail(e.target.value)} required></input>
             <label>Password:</label>
             <input type="password" ref={password} required></input>
             <label>Confirm Password:</label>

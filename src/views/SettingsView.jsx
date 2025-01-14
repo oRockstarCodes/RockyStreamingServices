@@ -72,6 +72,18 @@ function SettingsView() {
             <button>Change Name</button>
           </form>
         </div>
+        <div className="password">
+          <h1>Change Password</h1>
+          <form className="passwords">
+            <label>Old Password:</label>
+            <input type="password"></input>
+            <label>New Password:</label>
+            <input type="password"></input>
+            <label>Confirm Password</label>
+            <input type="password"></input>
+            <button>Change Password</button>
+          </form>
+        </div>
         <div className="checklist">
           <h2>Genres</h2>
           <p>Edit your 10 preferred genres</p>
@@ -92,6 +104,9 @@ function SettingsView() {
           })}
           <br></br>
           <button onClick={() => updateGenres()}>Update Your Genres</button>
+        </div>
+        <div className="back-button"> 
+           <button>Go Back</button>
         </div>
         <div className="previous-purchases">
 

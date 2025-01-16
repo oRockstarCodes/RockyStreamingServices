@@ -47,16 +47,19 @@ function RegisterView() {
   }
 
   const registerByGoogle = async () => {
+    const selectedGenres = Object.keys(checkboxesRef.current).filter((genreId) => checkboxesRef.current[genreId].checked).map(Number);
+    const sortedGenres = selectedGenres.map((genreId) => genres.find((genre) => genre.id === genreId)).sort((a, b) => a.genre.localeCompare(b.genre));
+
+    if (selectedGenres.length < 10) {
+      alert("Please select at least 10 genres!");
+      return;
+    }
     try {
       const user = (await signInWithPopup(auth, new GoogleAuthProvider())).user;
       setUser(user);
       setLoggedIn(true);
-      if (selectedGenres.length < 10) {
-        alert("Please select at least 10 genres!");
-        return;
-      }
       navigate(`/movies/genre/${sortedGenres[0].id}`);
-    } catch {
+    } catch (error) {
       alert("Error creating user with email and password!");
     }
   }
@@ -91,8 +94,8 @@ function RegisterView() {
               </div>
             ))}
             <button id="register" style={{ cursor: 'pointer' }}>Register</button>
-            <button id="google-register" style={{ cursor: 'pointer ' }} onClick={() => registerByGoogle()}> Register With Google</button>
           </form>
+          <button id="google-register" style={{ cursor: 'pointer ' }} onClick={() => registerByGoogle()}> Register With Google</button>
           <p className="login-link">Already have an account? <Link to={'/login'}>Login</Link></p>
         </div>
       </div>

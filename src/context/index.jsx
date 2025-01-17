@@ -1,20 +1,19 @@
-import { createContext, useState, useContext } from "react";
+import { createContext, useState, useContext, useEffect } from "react";
 import { Map } from 'immutable';
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "../firebase";
+import { firestore } from "../firebase";
+import { doc, getDoc } from "firebase/firestore";
 
 const StoreContext = createContext();
 
 export const StoreProvider = ({ children }) => {
-    const [firstName, setFirstName] = useState("");
-    const [lastName, setLastName] = useState("");
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [cart, setCart] = useState(Map());
-    const [loggedIn, setLoggedIn] = useState(false);
-    const [choices, setChoices] = useState([]);
-    const [defaultGenre, setDefaultGenre] = useState(28)
     const [user, setUser] = useState(null);
+    const [choices, setChoices] = useState([]);
+    const [cart, setCart] = useState(Map());
+    const [prevPurchases, setPrevPurchases] = useState(Map());
     const [loading, setLoading] = useState(true);
-    const [genres, setGenres] = useState([
+    const [availGenres, setAvailGenres] = useState([
         { id: 28, genre: "Action" },
         { id: 12, genre: "Adventure" },
         { id: 16, genre: "Animation" },
@@ -34,12 +33,43 @@ export const StoreProvider = ({ children }) => {
 
     useEffect(() => {
         onAuthStateChanged(auth, user => {
+            setUser(user);
             if (user) {
-                setUser(user);
-                const sessionCart = localStorage.getItem(user.uid);
+                const sessionCart = localStorage.getItem(user.email);
                 if (sessionCart) {
                     setCart(Map(JSON.parse(sessionCart)));
+                } else {
+                    setCart(Map());
                 }
+                const getPrevPurchases = async () => {
+                    try {
+                        const docu = doc(firestore, "users", user.email);
+                        const data = await getDoc(docu);
+                        if (data.exists()) {
+                            const prevCart = Map(data.data().previous);
+                            setPrevPurchases(prevCart);
+                        } else {
+                            setPrevPurchases(Map());
+                        }
+                    } catch (error) {
+                        alert("Cart error");
+                    }
+                };
+                getPrevPurchases();
+
+                const getGenres = async () => {
+                    try {
+                        const docu = doc(firestore, "users", user.email);
+                        const data = await getDoc(docu);
+                        if (data.exists()) {
+                            const genres = data.data().sortedGenres;
+                            setChoices(genres);
+                        }
+                    } catch (error) {
+                        alert("Genre error");
+                    }
+                };
+                getGenres();
             }
             setLoading(false);
         });
@@ -51,8 +81,7 @@ export const StoreProvider = ({ children }) => {
 
     return (
         <StoreContext.Provider value={{
-            firstName, setFirstName, lastName, setLastName, email, setEmail,
-            password, setPassword, cart, setCart, choices, setChoices, loggedIn, setLoggedIn, defaultGenre, setDefaultGenre, genres, setGenres, user, setUser
+            cart, setCart, choices, setChoices, user, setUser, prevPurchases, setPrevPurchases, availGenres, setAvailGenres
         }}>
             {children}
         </StoreContext.Provider>

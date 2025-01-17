@@ -3,15 +3,15 @@ import Header from "../components/Header.jsx";
 import Footer from "../components/Footer.jsx";
 import { useNavigate } from "react-router";
 import { useState, useRef } from "react";
-import { useStoreContext } from "../context";
-import { Map } from 'immutable';
 import { Link } from "react-router-dom";
+import { useStoreContext } from "../context";
 import { createUserWithEmailAndPassword, updateProfile, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
-import { auth } from "../firebase";
+import { auth, firestore } from "../firebase";
+import { doc, setDoc } from "firebase/firestore";
 
 function RegisterView() {
   const navigate = useNavigate();
-  const { setFirstName, setLastName, setEmail, setPassword, setChoices, setLoggedIn, setDefaultGenre, setCart, genres } = useStoreContext();
+  const {  setChoices, availGenres, setUser } = useStoreContext();
   const firstName = useRef('');
   const lastName = useRef('');
   const email = useRef('');
@@ -19,52 +19,50 @@ function RegisterView() {
   const [checkPassword, setCheckPassword] = useState("");
   const checkboxesRef = useRef({});
 
-  const registerByGoogle = async () => {
+  const registerByEmail = async (event) => {
+    event.preventDefault();
     try {
-      const user = (await signInWithPopup(auth, new GoogleAuthProvider())).user;
+      const user = (await createUserWithEmailAndPassword(auth, email.current.value, password.current.value)).user;
+      await updateProfile(user, { displayName: `${firstName.current.value} ${lastName.current.value}` });
       setUser(user);
-      navigate('/movies/all');
-    } catch {
-      alert("Error creating user with email and password!");
+      const selectedGenres = Object.keys(checkboxesRef.current).filter((genreId) => checkboxesRef.current[genreId].checked).map(Number);
+      const sortedGenres = selectedGenres.map((genreId) => genres.find((genre) => genre.id === genreId)).sort((a, b) => a.genre.localeCompare(b.genre));
+      if (selectedGenres.length < 10) {
+        alert("Please Select At Least 10 Genres");
+        return;
+      }
+      if (password.current.value != checkPassword) {
+        return alert("Passwords Do Not Match. Please Try Again.");
+      }else{
+        setPassword(password.current.value);
+      }
+      setChoices(sortedGenres);
+      const docu = doc(firestore, "users", user.email);
+      await setDoc(docu, {sortedGenres});
+      navigate(`/movies/genre/${sortedGenres[0].id}`);
+    } catch (error) {
+      alert("Error Occured");
     }
   }
 
-  const registerByEmail = async (event) => {
+  const registerByGoogle = async () => {
+    const selectedGenres = Object.keys(checkboxesRef.current).filter((genreId) => checkboxesRef.current[genreId].checked).map(Number);
+    const sortedGenres = selectedGenres.map((genreId) => genres.find((genre) => genre.id === genreId)).sort((a, b) => a.genre.localeCompare(b.genre));
 
-
-
-    try {
-      const user = (await createUserWithEmailAndPassword(auth, email, password)).user;
-      await updateProfile(user, { displayName: `${firstName} ${lastName}` });
-      setUser(user);
-      event.preventDefault();
-      setFirstName(firstName.current.value);
-      setLastName(lastName.current.value);
-      setEmail(email.current.value);
-      setPassword(password.current.value);
-      setLoggedIn(true);
-      setChoices(sortedGenres);
-      setDefaultGenre(sortedGenres[0].id);
-      setCart(Map());
-
-      if (password.current.value != checkPassword) {
-        return alert("Passwords do not match. Please re-enter your password correctly");
-      }
-
-      const selectedGenres = Object.keys(checkboxesRef.current).filter((genreId) => checkboxesRef.current[genreId].checked).map(Number);
-
-      if (selectedGenres.length < 10) {
-        alert("Please select at least 10 genres!");
-        return;
-      }
-
-      const sortedGenres = selectedGenres.map((genreId) => genres.find((genre) => genre.id === genreId)).sort((a, b) => a.genre.localeCompare(b.genre));
-      navigate(`/movies/genre/${sortedGenres[0].id}`);
-
-    } catch (error) {
-      alert("Error creating user with email and password!");
+    if (selectedGenres.length < 10) {
+      alert("Please select at least 10 genres!");
+      return;
     }
-
+    try {
+      const user = (await signInWithPopup(auth, new GoogleAuthProvider())).user;
+      setUser(user);
+      setChoices(sortedGenres);
+      const docu = doc(firestore, "users", user.email);
+      await setDoc(docu, {sortedGenres});
+      navigate(`/movies/genre/${sortedGenres[0].id}`);
+    } catch (error) {
+      alert("Error Has Occured");
+    }
   }
   return (
     <div>
@@ -84,7 +82,7 @@ function RegisterView() {
             <label>Confirm Password:</label>
             <input type="password" value={checkPassword} onChange={(event) => { setCheckPassword(event.target.value) }} required></input>
             <p>Please choose up to 10 preferred genres</p>
-            {genres.map((item) => (
+            {availGenres.map((item) => (
               <div key={item.id}>
                 <input
                   type="checkbox"
@@ -96,11 +94,9 @@ function RegisterView() {
               </div>
             ))}
             <button id="register" style={{ cursor: 'pointer' }}>Register</button>
-            <button onClick={() => registerByGoogle()} className="register-button" style={{ cursor: 'pointer' }}>Register by Google</button>
           </form>
-          <p className="login-link">
-            Already have an account? <Link to={'/login'}>Login</Link>
-          </p>
+          <button id="google-register" style={{ cursor: 'pointer ' }} onClick={() => registerByGoogle()}> Register With Google</button>
+          <p className="login-link">Already have an account? <Link to={'/login'}>Login</Link></p>
         </div>
       </div>
       <Footer />

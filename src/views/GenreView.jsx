@@ -19,7 +19,6 @@ function GenreView() {
       );
       setMovies(response.data.results);
       setMaxPage(response.data.total_pages);
-      console.log(params.id);
     })();
   }, [page]);
 

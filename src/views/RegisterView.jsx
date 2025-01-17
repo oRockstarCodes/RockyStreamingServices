@@ -26,28 +26,26 @@ function RegisterView() {
       await updateProfile(user, { displayName: `${firstName.current.value} ${lastName.current.value}` });
       setUser(user);
       const selectedGenres = Object.keys(checkboxesRef.current).filter((genreId) => checkboxesRef.current[genreId].checked).map(Number);
-      const sortedGenres = selectedGenres.map((genreId) => genres.find((genre) => genre.id === genreId)).sort((a, b) => a.genre.localeCompare(b.genre));
+      const sortedGenres = selectedGenres.map((genreId) => availGenres.find((genre) => genre.id === genreId)).sort((a, b) => a.genre.localeCompare(b.genre));
       if (selectedGenres.length < 10) {
         alert("Please Select At Least 10 Genres");
         return;
       }
       if (password.current.value != checkPassword) {
         return alert("Passwords Do Not Match. Please Try Again.");
-      }else{
-        setPassword(password.current.value);
       }
       setChoices(sortedGenres);
       const docu = doc(firestore, "users", user.email);
       await setDoc(docu, {sortedGenres});
       navigate(`/movies/genre/${sortedGenres[0].id}`);
     } catch (error) {
-      alert("Error Occured");
+      alert(error);
     }
   }
 
   const registerByGoogle = async () => {
     const selectedGenres = Object.keys(checkboxesRef.current).filter((genreId) => checkboxesRef.current[genreId].checked).map(Number);
-    const sortedGenres = selectedGenres.map((genreId) => genres.find((genre) => genre.id === genreId)).sort((a, b) => a.genre.localeCompare(b.genre));
+    const sortedGenres = selectedGenres.map((genreId) => availGenres.find((genre) => genre.id === genreId)).sort((a, b) => a.genre.localeCompare(b.genre));
 
     if (selectedGenres.length < 10) {
       alert("Please select at least 10 genres!");

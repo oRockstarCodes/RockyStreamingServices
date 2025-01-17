@@ -52,7 +52,7 @@ export const StoreProvider = ({ children }) => {
                             setPrevPurchases(Map());
                         }
                     } catch (error) {
-                        alert("Cart error");
+                        console.log(error);
                     }
                 };
                 getPrevPurchases();
@@ -66,7 +66,7 @@ export const StoreProvider = ({ children }) => {
                             setChoices(genres);
                         }
                     } catch (error) {
-                        alert("Genre error");
+                        console.log(error);
                     }
                 };
                 getGenres();

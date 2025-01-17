@@ -9,7 +9,7 @@ import { doc, getDoc } from "firebase/firestore";
 
 function LoginView() {
     let [email, setEmail] = useState("");
-    let [pass, setPass] = useState("");
+    let [password, setPass] = useState("");
     const { setUser } = useStoreContext();
     const navigate = useNavigate();
 

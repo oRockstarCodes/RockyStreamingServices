@@ -12,6 +12,8 @@ export const StoreProvider = ({ children }) => {
     const [loggedIn, setLoggedIn] = useState(false);
     const [choices, setChoices] = useState([]);
     const [defaultGenre, setDefaultGenre] = useState(28)
+    const [user, setUser] = useState(null);
+    const [loading, setLoading] = useState(true);
     const [genres, setGenres] = useState([
         { id: 28, genre: "Action" },
         { id: 12, genre: "Adventure" },
@@ -28,12 +30,29 @@ export const StoreProvider = ({ children }) => {
         { id: 53, genre: "Thriller" },
         { id: 10752, genre: "War" },
         { id: 37, genre: "Western" }
-      ]);
+    ]);
+
+    useEffect(() => {
+        onAuthStateChanged(auth, user => {
+            if (user) {
+                setUser(user);
+                const sessionCart = localStorage.getItem(user.uid);
+                if (sessionCart) {
+                    setCart(Map(JSON.parse(sessionCart)));
+                }
+            }
+            setLoading(false);
+        });
+    }, [])
+
+    if (loading) {
+        return <h1>Loading...</h1>
+    }
 
     return (
         <StoreContext.Provider value={{
             firstName, setFirstName, lastName, setLastName, email, setEmail,
-            password, setPassword, cart, setCart, choices, setChoices, loggedIn, setLoggedIn, defaultGenre, setDefaultGenre, genres, setGenres
+            password, setPassword, cart, setCart, choices, setChoices, loggedIn, setLoggedIn, defaultGenre, setDefaultGenre, genres, setGenres, user, setUser
         }}>
             {children}
         </StoreContext.Provider>

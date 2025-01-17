@@ -19,40 +19,6 @@ function RegisterView() {
   const [checkPassword, setCheckPassword] = useState("");
   const checkboxesRef = useRef({});
 
-  const registerByEmail = async (event) => {
-    event.preventDefault();
-    try {
-      const user = (await createUserWithEmailAndPassword(auth, email, password)).user;
-      await updateProfile(user, { displayName: `${firstName} ${lastName}` });
-      setUser(user);
-      const selectedGenres = Object.keys(checkboxesRef.current).filter((genreId) => checkboxesRef.current[genreId].checked).map(Number);
-
-      if (selectedGenres.length < 10) {
-        alert("Please select at least 10 genres!");
-        return;
-      }
-
-      if (password.current.value != checkPassword) {
-        return alert("Passwords do not match. Please re-enter your password correctly");
-      }
-
-      const sortedGenres = selectedGenres.map((genreId) => genres.find((genre) => genre.id === genreId)).sort((a, b) => a.genre.localeCompare(b.genre));
-      setFirstName(firstName.current.value);
-      setLastName(lastName.current.value);
-      setEmail(email.current.value);
-      setPassword(password.current.value);
-      setLoggedIn(true);
-      setChoices(sortedGenres);
-      setDefaultGenre(sortedGenres[0].id);
-      setCart(Map());
-      console.log("test");
-      console.log(sortedGenres[0].id);
-      navigate(`/movies/genre/${sortedGenres[0].id}`);
-    } catch (error) {
-      alert("Error creating user with email and password!");
-    }
-  }
-
   const registerByGoogle = async () => {
     try {
       const user = (await signInWithPopup(auth, new GoogleAuthProvider())).user;
@@ -63,13 +29,50 @@ function RegisterView() {
     }
   }
 
+  const registerByEmail = async (event) => {
+
+
+
+    try {
+      const user = (await createUserWithEmailAndPassword(auth, email, password)).user;
+      await updateProfile(user, { displayName: `${firstName} ${lastName}` });
+      setUser(user);
+      event.preventDefault();
+      setFirstName(firstName.current.value);
+      setLastName(lastName.current.value);
+      setEmail(email.current.value);
+      setPassword(password.current.value);
+      setLoggedIn(true);
+      setChoices(sortedGenres);
+      setDefaultGenre(sortedGenres[0].id);
+      setCart(Map());
+
+      if (password.current.value != checkPassword) {
+        return alert("Passwords do not match. Please re-enter your password correctly");
+      }
+
+      const selectedGenres = Object.keys(checkboxesRef.current).filter((genreId) => checkboxesRef.current[genreId].checked).map(Number);
+
+      if (selectedGenres.length < 10) {
+        alert("Please select at least 10 genres!");
+        return;
+      }
+
+      const sortedGenres = selectedGenres.map((genreId) => genres.find((genre) => genre.id === genreId)).sort((a, b) => a.genre.localeCompare(b.genre));
+      navigate(`/movies/genre/${sortedGenres[0].id}`);
+
+    } catch (error) {
+      alert("Error creating user with email and password!");
+    }
+
+  }
   return (
     <div>
       <Header showAuthButtons={false} />
       <div className="register-container">
         <div className="form-container">
           <h1>Create an Account</h1>
-          <form onSubmit={(event) => { register(event) }} action="#" method="POST">
+          <form onSubmit={(event) => { registerByEmail(event) }} action="#" method="POST">
             <label>First Name:</label>
             <input type="text" ref={firstName} required></input>
             <label>Last Name:</label>
@@ -93,9 +96,11 @@ function RegisterView() {
               </div>
             ))}
             <button id="register" style={{ cursor: 'pointer' }}>Register</button>
-            <button id="google-register" style={{ cursor: 'pointer ' }} onClick={() => registerByGoogle()}> Register With Google</button>
+            <button onClick={() => registerByGoogle()} className="register-button" style={{ cursor: 'pointer' }}>Register by Google</button>
           </form>
-          <p className="login-link">Already have an account? <Link to={'/login'}>Login</Link></p>
+          <p className="login-link">
+            Already have an account? <Link to={'/login'}>Login</Link>
+          </p>
         </div>
       </div>
       <Footer />

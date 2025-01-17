@@ -8,8 +8,10 @@ import GenreView from "../src/views/GenreView";
 import AllMoviesView from "../src/views/AllMoviesView";
 import CartView from "../src/views/CartView";
 import SettingsView from "../src/views/SettingsView";
+import ErrorView from "../src/views/ErrorView";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { StoreProvider } from "./context";
+import ProtectedRoutes from "./util/ProtectedRoutes";
 
 function App() {
   return (
@@ -20,17 +22,19 @@ function App() {
             <Route path="/" element={<HomeView />} />
             <Route path="/register" element={<RegisterView />} />
             <Route path="/login" element={<LoginView />} />
-            <Route path="/movies" element={<MoviesView />}>
-              <Route path="all" element={<AllMoviesView />} />
-              <Route path="genre/:id" element={<GenreView />} />
-              <Route path="detail/:id" element={<DetailView />} />
+            <Route element={<ProtectedRoutes />}>
+              <Route path="/movies" element={<MoviesView />}>
+                <Route path="all" element={<AllMoviesView />} />
+                <Route path="genre/:id" element={<GenreView />} />
+                <Route path="detail/:id" element={<DetailView />} />
+              </Route>
+              <Route path="/cart" element={<CartView />} />
+              <Route path="/settings" element={<SettingsView />} />
             </Route>
-            <Route path="/cart" element={<CartView />} />
-            <Route path="/settings" element={<SettingsView />} />
+            <Route path="*" element={<ErrorView />} />
           </Routes>
         </BrowserRouter>
       </StoreProvider>
-
     </>
   )
 }

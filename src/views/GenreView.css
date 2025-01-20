@@ -1,80 +1,82 @@
-.movie-container {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr); /* 5 columns */
-  grid-template-rows: auto; /* Automatically adjust rows */
-  gap: 10px; /* Reduced space between items */
-  padding: 20px;
+/* GenreView.css - YouTube Dark Mode Theme */
+
+body {
   background-color: #181818;
-  color: white;
+  color: #fff;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.movie-container {
+  display: flex;
+  flex-wrap: wrap;
   justify-content: center;
+  gap: 20px;
+  padding: 20px;
 }
 
 .movie-item {
   position: relative;
-  margin: 0 auto; /* Center the movie item horizontally */
-  width: 100%; /* Use full available space */
-  text-align: center;
+  background-color: #202020;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s;
+}
+
+.movie-item:hover {
+  transform: scale(1.05);
 }
 
 .movie-image {
+  display: block;
   width: 100%;
-  height: 400px; /* Fixed height for posters */
-  object-fit: cover; /* Ensures the image covers the container without distortion */
-  border-radius: 5px;
-  transition: transform 0.3s ease;
-}
-
-.movie-image:hover {
-  transform: scale(1.05);
+  border-bottom: 1px solid #333;
 }
 
 .buy-button {
   position: absolute;
   bottom: 10px;
   right: 10px;
-  padding: 5px 10px;
-  background-color: #d32f2f;
-  color: white;
+  padding: 10px 15px;
+  background-color: #cc0000;
+  color: #fff;
+  font-size: 14px;
   border: none;
-  border-radius: 3px;
+  border-radius: 5px;
   cursor: pointer;
-  font-size: 0.9rem;
+  transition: background-color 0.3s;
 }
 
 .buy-button:hover {
-  background-color: #b71c1c;
+  background-color: #e60000;
 }
 
 .pagination-container {
-  width: 100%;
-  text-align: center;
-  margin-top: 20px;
-  color: white;
-}
-
-#page-count {
-  margin-bottom: 10px;
-  font-size: 1rem;
-}
-
-.button-container {
   display: flex;
   justify-content: center;
   gap: 10px;
+  margin: 20px 0;
 }
 
 .page-button {
   padding: 10px 20px;
-  background-color: #d32f2f;
-  color: white;
+  background-color: #333;
+  color: #fff;
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  font-size: 1rem;
-  transition: background-color 0.3s ease, transform 0.2s ease;
+  transition: background-color 0.3s;
 }
 
 .page-button:hover {
-  background-color: #b71c1c;
-  transform: scale(1.05);
+  background-color: #444;
+}
+
+#page-count {
+  text-align: center;
+  font-size: 16px;
+  margin-top: 10px;
+  color: #ccc;
 }

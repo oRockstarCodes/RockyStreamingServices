@@ -13,23 +13,7 @@ export const StoreProvider = ({ children }) => {
     const [cart, setCart] = useState(Map());
     const [prevPurchases, setPrevPurchases] = useState(Map());
     const [loading, setLoading] = useState(true);
-    const [availGenres, setAvailGenres] = useState([
-        { id: 28, genre: "Action" },
-        { id: 12, genre: "Adventure" },
-        { id: 16, genre: "Animation" },
-        { id: 35, genre: "Comedy" },
-        { id: 80, genre: "Crime" },
-        { id: 10751, genre: "Family" },
-        { id: 14, genre: "Fantasy" },
-        { id: 36, genre: "History" },
-        { id: 27, genre: "Horror" },
-        { id: 10402, genre: "Music" },
-        { id: 9648, genre: "Mystery" },
-        { id: 878, genre: "Sci-Fi" },
-        { id: 53, genre: "Thriller" },
-        { id: 10752, genre: "War" },
-        { id: 37, genre: "Western" }
-    ]);
+    
 
     useEffect(() => {
         onAuthStateChanged(auth, user => {
@@ -43,8 +27,8 @@ export const StoreProvider = ({ children }) => {
                 }
                 const getPrevPurchases = async () => {
                     try {
-                        const docu = doc(firestore, "users", user.email);
-                        const data = await getDoc(docu);
+                        const docRef = doc(firestore, "users", user.email);
+                        const data = await getDoc(docRef);
                         if (data.exists()) {
                             const prevCart = Map(data.data().previous);
                             setPrevPurchases(prevCart);
@@ -56,11 +40,10 @@ export const StoreProvider = ({ children }) => {
                     }
                 };
                 getPrevPurchases();
-
                 const getGenres = async () => {
                     try {
-                        const docu = doc(firestore, "users", user.email);
-                        const data = await getDoc(docu);
+                        const docRef = doc(firestore, "users", user.email);
+                        const data = await getDoc(docRef);
                         if (data.exists()) {
                             const genres = data.data().sortedGenres;
                             setChoices(genres);
@@ -81,7 +64,7 @@ export const StoreProvider = ({ children }) => {
 
     return (
         <StoreContext.Provider value={{
-            cart, setCart, choices, setChoices, user, setUser, prevPurchases, setPrevPurchases, availGenres, setAvailGenres
+            cart, setCart, choices, setChoices, user, setUser, prevPurchases, setPrevPurchases, 
         }}>
             {children}
         </StoreContext.Provider>

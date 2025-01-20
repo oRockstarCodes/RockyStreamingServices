@@ -1,140 +1,119 @@
-/* Main container */
-.settings {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 30px;
-  color: #eaeaea;
+/* Updated GenreView.css - YouTube Red Theme */
+
+body {
   background-color: #181818;
-  border-radius: 10px;
-}
-
-/* Header */
-.settings h1 {
-  font-size: 2.5rem;
   color: #fff;
-  margin-bottom: 40px;
-  text-align: center;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
 }
 
-/* Profile section */
-.profile {
+.settings {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  padding: 20px;
+}
+
+.profile, .password, .checklist, .back-button {
   background-color: #202020;
-  padding: 30px;
+  padding: 20px;
   border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-  margin-bottom: 40px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-.profile form {
+.profile, .password, .checklist {
+  margin-bottom: 20px;
+}
+
+.profile {
+  flex: 1;
+}
+
+.checklist {
   display: flex;
   flex-direction: column;
-  gap: 20px;
-}
-
-.profile form input {
-  padding: 12px;
-  font-size: 1rem;
-  border-radius: 6px;
-  border: 1px solid #333;
-  background-color: #333;
-  color: #eaeaea;
-  outline: none;
-}
-
-.profile form button {
-  background-color: #ff0000;
-  color: #fff;
-  padding: 12px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 1.1rem;
-  transition: background-color 0.3s ease;
-}
-
-.profile form button:hover {
-  background-color: #cc0000;
-}
-
-.profile label {
-  font-size: 1.1rem;
-  color: #fff;
-  margin-bottom: 8px;
-}
-
-.profile input[readonly] {
-  cursor: not-allowed;
-  background-color: #444;
-}
-
-/* Genre Checklist section */
-.checklist {
-  background-color: #202020;
-  padding: 30px;
-  border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-}
-
-.checklist h2 {
-  font-size: 2rem;
-  color: #fff;
-  margin-bottom: 15px;
-  text-align: center;
-}
-
-.checklist p {
-  color: #aaa;
-  margin-bottom: 20px;
-  text-align: center;
+  gap: 15px;
 }
 
 .checklist div {
   display: flex;
   align-items: center;
-  gap: 15px;
-  margin-bottom: 18px;
+  gap: 10px;
 }
 
 .checklist input[type="checkbox"] {
-  cursor: pointer;
   width: 20px;
   height: 20px;
-  border-radius: 4px;
-}
-
-.checklist .genre-name {
-  font-size: 1.2rem;
-  color: #fff;
-}
-
-.checklist button {
-  background-color: #ff0000;
-  color: #fff;
-  padding: 15px 25px;
-  border: none;
-  border-radius: 6px;
   cursor: pointer;
-  font-size: 1.2rem;
-  transition: background-color 0.3s ease;
-  width: 100%;
-  margin-top: 20px;
 }
 
-.checklist button:hover {
-  background-color: #cc0000;
+.checklist label {
+  font-size: 20px;
+  color: #ccc;
+  cursor: pointer;
+  transform: translatey(-4px);
 }
 
-footer {
-  margin-top: 40px;
+.back-button {
   text-align: center;
-  color: #bbb;
 }
 
-footer a {
-  color: #bbb;
-  text-decoration: none;
+.previous-purchases {
+  flex: 1;
+  background-color: #202020;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-footer a:hover {
+.previous-purchases h2 {
+  margin-bottom: 20px;
+}
+
+.purchases {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.purchases div {
+  background-color: #333;
+  border-radius: 10px;
+  padding: 10px;
+  text-align: center;
   color: #fff;
+  max-width: 120px;
+}
+
+.purchases img {
+  width: 100px;
+  height: auto;
+  border-radius: 5px;
+}
+
+/* Button Styles */
+button {
+  background-color: #FF0000; /* YouTube Red */
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+button:hover {
+  background-color: #cc0000; /* Darker YouTube Red */
+  transform: scale(1.05);
+}
+
+button:active {
+  background-color: #b30000; /* Even darker YouTube Red */
+  transform: scale(0.98);
 }

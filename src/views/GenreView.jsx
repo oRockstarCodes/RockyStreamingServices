@@ -2,7 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import "./GenreView.css";
-import { useStoreContext } from "../context"; 
+import { useStoreContext } from "../context";
 
 function GenreView() {
   const [movies, setMovies] = useState([]);
@@ -10,7 +10,7 @@ function GenreView() {
   const [maxPage, setMaxPage] = useState(0);
   const navigate = useNavigate();
   const params = useParams();
-  const { cart, setCart } = useStoreContext();
+  const { cart, setCart, user, prevPurchases } = useStoreContext();
 
   useEffect(() => {
     (async function getGenre() {
@@ -45,6 +45,32 @@ function GenreView() {
     }
   }
 
+  const addCart = (id, title, poster) => {
+    if (prevPurchases.has(id + "")) {
+      return;
+    }
+
+    if (cart.has(id + "")) {
+      return;
+    }
+
+    setCart((prevCart) => {
+      const cart = prevCart.set(id + "", { title: title, url: poster });
+      localStorage.setItem(user.email, JSON.stringify(cart.toJS()));
+      return cart;
+    });
+  }
+
+  function status(id) {
+    if (prevPurchases.has(id + "")) {
+      return "Purchased";
+    } else if (cart.has(id + "")) {
+      return "Added";
+    } else {
+      return "Buy";
+    }
+  }
+
   return (
     <div className="movie-container">
       {movies.length > 0 ? (
@@ -60,9 +86,8 @@ function GenreView() {
             />
             <button
               className="buy-button"
-              onClick={() => setCart((prevCart) => prevCart.set(movie.id + "", { title: movie.original_title, url: movie.poster_path }))}
-            >
-              {cart.has(movie.id + "") ? "Added" : "Buy"}
+              onClick={() => addCart(movie.id, movie.original_title, movie.poster_path)}
+            >{status(movie.id)}
             </button>
           </div>
         ))

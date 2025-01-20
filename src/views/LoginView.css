@@ -29,6 +29,9 @@ h1 {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
   width: 100%;
   max-width: 400px;
+  height: auto; /* Allows form container to adjust based on content */
+  max-height: 70vh; /* Limits height to 70% of viewport height */
+  overflow-y: auto; /* Enables scrolling within form if content exceeds max-height */
 }
 
 form {
@@ -69,8 +72,25 @@ input:focus {
   transition: background-color 0.3s ease;
 }
 
+.login-google-button {
+  padding: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #444;
+  background-color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
 .login-button:hover {
   background-color: #f6121d;
+}
+
+.login-google-button:hover {
+  background-color:#4285F4;
+  color:#fff;
 }
 
 .register-link {

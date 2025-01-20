@@ -5,27 +5,29 @@ import Footer from "../components/Footer";
 import { useStoreContext } from "../context";
 import { signOut } from "firebase/auth";
 import { auth } from "../firebase";
+import { Map } from 'immutable';
 
 function MoviesView() {
     const navigate = useNavigate();
-    const { choices, firstName, user, setUser } = useStoreContext();
+    const { choices, user, setUser, setPrevPurchases } = useStoreContext();
 
     async function logout() {
         try {
-            await navigate("/");
+            await signOut(auth)
+            navigate("/login");
             setUser(null);
             signOut(auth);
+            setPrevPurchases(Map());
         }catch (error){
-            alert("Error Signing Out");
+            alert(error);
         }
-        
     }
 
     return (
         <div className="app-container">
             <div className="header">
                 <h1>Rocky Streaming Service</h1>
-                <h1 id="title">Welcome {firstName} </h1>
+                <h1 id="title">Welcome {user.displayName.split(" ")[0]} </h1>
                 <div className="header-buttons">
                     <button onClick={logout} className="logout-button">Logout</button>
                     <Link to={`/cart`} className="cart-button">Cart</Link>

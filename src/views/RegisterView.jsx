@@ -8,6 +8,7 @@ import { useStoreContext } from "../context";
 import { createUserWithEmailAndPassword, updateProfile, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { auth, firestore } from "../firebase";
 import { doc, setDoc, getDoc } from "firebase/firestore";
+import { signOut } from "firebase/auth";
 
 function RegisterView() {
   const navigate = useNavigate();
@@ -56,7 +57,7 @@ function RegisterView() {
       await setDoc(docRef, { sortedGenres });
       navigate(`/movies/genre/${sortedGenres[0].id}`);
     } catch (error) {
-      alert(error);
+      alert("You Have Already Registered, Please Login");
     }
   }
 
@@ -73,7 +74,9 @@ function RegisterView() {
       const docRef = doc(firestore, "users", user.email);
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
-        alert("You Have Already Registered");
+        setUser(null);
+        await signOut(auth);
+        alert("You Have Already Registered, Please Login");
         return;
       } else {
         setUser(user);
